@@ -1,4 +1,4 @@
-# sql-foodie-fi-case-study
+![image](https://github.com/iqraburki/sql-foodie-fi-case-study/assets/169553712/ce0277b8-4db6-4087-a619-ed8e8121ccd4)# sql-foodie-fi-case-study
 ---Query 1: How many customers has Foodie-Fi ever had?
 
 SELECT COUNT(DISTINCT customer_id)
@@ -145,6 +145,41 @@ basic monthly  	224              	22.4
 pro monthly	    326              	32.6
 pro annual     	195              	19.5
 churn	          236              	23.6
+
+----	More people upgraded to the pro monthly plan, but fewer people signed up for the trial plan.
+
+---- Query 8: How many customers have upgraded to an annual plan in 2020?
+
+SELECT COUNT(DISTINCT customer_id) AS total_customers
+FROM subscriptions 
+WHERE plan_id = 3 AND EXTRACT(YEAR from start_date ) = '2020'
+
+--- Result
+
+total_customers
+195
+
+---- 	195 customers upgraded to an annual plan in 2020.
+
+--- Query 9: How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
+
+WITH trial_plan AS (
+    SELECT customer_id,
+           start_date AS trial_date
+    FROM subscriptions
+    WHERE plan_id = 0),
+annual_plan AS (
+    SELECT customer_id,
+           start_date AS annual_date
+    FROM subscriptions
+    WHERE plan_id = 3)
+SELECT ROUND(AVG(ABS(DATEDIFF(trial_date, annual_date))), 0) AS avg_days_to_upgrade
+FROM trial_plan tp
+JOIN annual_plan ap ON tp.customer_id = ap.customer_id;
+
+--- Result 
+avg_days_to_upgrade
+105
 
 
 
