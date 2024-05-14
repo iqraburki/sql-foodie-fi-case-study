@@ -1,4 +1,4 @@
-![image](https://github.com/iqraburki/sql-foodie-fi-case-study/assets/169553712/7aa00206-3ad9-40a4-8d79-e6363cf924fc)# sql-foodie-fi-case-study
+# sql-foodie-fi-case-study
 ---Query 1: How many customers has Foodie-Fi ever had?
 
 SELECT COUNT(DISTINCT customer_id)
@@ -91,5 +91,60 @@ customers_churned_afer_trial	churn_after_trial_percent
 92	                           9
 
 --- 92 customers, or 9% of the total customers, have churned straight after their initial trial  from Foodie-fi.
+
+---- Query 6: What is the number and percentage of customer plans after their initial free trial?
+
+WITH CTE AS (
+SELECT
+customer_id,
+plan_name,
+ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY start_date ASC) as rn
+FROM subscriptions as S
+INNER JOIN plans as P on P.plan_id = S.plan_id
+)
+SELECT 
+plan_name,
+COUNT(customer_id) as customer_count,
+ROUND((COUNT(customer_id) / (SELECT COUNT(DISTINCT customer_id) FROM CTE))*100,1) as customer_percent
+FROM CTE
+WHERE rn = 2
+GROUP BY plan_name;
+
+--- Result
+plan_name   	     customer_count     	customer_percent
+basic monthly    	546                	54.6
+pro annual       	37	                 3.7
+pro monthly      	325                	32.5
+churn            	92                  9.2
+
+---	More than 80% of customers are on paid plans.
+
+---- Query 7: What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
+
+WITH CTE AS (
+SELECT *
+,ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY start_date DESC) as rn
+FROM subscriptions
+WHERE start_date <= '2020-12-31'
+)
+SELECT 
+plan_name,
+COUNT(customer_id) as customer_count,
+ROUND((COUNT(customer_id)/(SELECT COUNT(DISTINCT customer_id) FROM CTE))*100,1) 
+as percent_of_customers
+FROM CTE
+INNER JOIN plans 
+as P on CTE.plan_id = P.plan_id
+WHERE rn = 1
+GROUP BY plan_name;
+
+--- Result 
+plan_name	      customer_count	   percent_of_customers
+trial	          19	               1.9
+basic monthly  	224              	22.4
+pro monthly	    326              	32.6
+pro annual     	195              	19.5
+churn	          236              	23.6
+
 
 
