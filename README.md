@@ -181,5 +181,57 @@ JOIN annual_plan ap ON tp.customer_id = ap.customer_id;
 avg_days_to_upgrade
 105
 
+---On average, it takes 105 days for customers to upgrade to an annual plan after they join Foodie-Fi.
+
+----Query 10: Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
+
+WITH TRIAL AS (
+    SELECT customer_id, 
+           start_date AS trial_start 
+    FROM subscriptions 
+    WHERE plan_id = 0
+), 
+ANNUAL AS (
+    SELECT customer_id, 
+           start_date AS annual_start 
+    FROM subscriptions 
+    WHERE plan_id = 3
+)
+SELECT 
+    CASE 
+        WHEN DATEDIFF(annual_start, trial_start) <= 30 THEN '0-30'
+        WHEN DATEDIFF(annual_start, trial_start) <= 60 THEN '31-60'
+        WHEN DATEDIFF(annual_start, trial_start) <= 90 THEN '61-90'
+        WHEN DATEDIFF(annual_start, trial_start) <= 120 THEN '91-120'
+        WHEN DATEDIFF(annual_start, trial_start) <= 150 THEN '121-150'
+        WHEN DATEDIFF(annual_start, trial_start) <= 180 THEN '151-180'
+        WHEN DATEDIFF(annual_start, trial_start) <= 210 THEN '181-210'
+        WHEN DATEDIFF(annual_start, trial_start) <= 240 THEN '211-240'
+        WHEN DATEDIFF(annual_start, trial_start) <= 270 THEN '241-270'
+        WHEN DATEDIFF(annual_start, trial_start) <= 300 THEN '271-300'
+        WHEN DATEDIFF(annual_start, trial_start) <= 330 THEN '301-330'
+        WHEN DATEDIFF(annual_start, trial_start) <= 360 THEN '331-360'
+    END AS intervals,
+    COUNT(T.customer_id) AS customer_count 
+FROM TRIAL AS T 
+INNER JOIN ANNUAL AS A ON T.customer_id = A.customer_id 
+GROUP BY intervals;
+
+--- Result
+intervals	    customer_count
+0-30         	49
+121-150      	42
+61-90	        34
+31-60	        24
+151-180      	36
+91-120	       35
+181-210	      26
+331-360      	1
+241-270      	5
+211-240      	4
+271-300      	1
+301-330      	1
+
+---- The majority of customers tend to subscribe or upgrade to an annual plan within the first 30 days.
 
 
