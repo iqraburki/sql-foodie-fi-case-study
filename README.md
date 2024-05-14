@@ -234,4 +234,26 @@ intervals	    customer_count
 
 ---- The majority of customers tend to subscribe or upgrade to an annual plan within the first 30 days.
 
+--- Query 11: How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
+
+WITH next_plan_cte AS (
+SELECT customer_id,
+       plan_id,
+       start_date,
+       LEAD(plan_id) OVER(PARTITION BY customer_id ORDER BY plan_id) AS next_plan
+FROM subscriptions
+)
+SELECT COUNT(*) AS downgraded
+FROM next_plan_cte
+WHERE start_date <= '2020-12-31'
+	AND plan_id = 2 AND next_plan = 1; 
+
+ ---- Result 
+ 
+ downgraded
+ 0
+---- 	No customer has downgraded from pro monthly to basic monthly in 2020.
+ 
+
+
 
