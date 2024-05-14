@@ -1,4 +1,4 @@
-![image](https://github.com/iqraburki/sql-foodie-fi-case-study/assets/169553712/ce0277b8-4db6-4087-a619-ed8e8121ccd4)# sql-foodie-fi-case-study
+# sql-foodie-fi-case-study
 ---Query 1: How many customers has Foodie-Fi ever had?
 
 SELECT COUNT(DISTINCT customer_id)
