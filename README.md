@@ -22,15 +22,15 @@ months	COUNT(*)
 1	      88
 2	      68
 3	      94
-4     	81
+4             81
 5	      88
 6	      79
-7     	89
-8     	88
-9     	87
-10    	79
-11    	75
-12	    84
+7     	      89
+8     	      88
+9     	      87
+10    	      79
+11    	      75
+12	      84
 
 ----	March (3) has the highest number of trial plans, while February (2) has the lowest number of trial plans.
 
