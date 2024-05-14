@@ -113,9 +113,9 @@ GROUP BY plan_name;
 --- Result
 plan_name   	     customer_count     	customer_percent
 basic monthly    	546                	54.6
-pro annual       	37	                 3.7
+pro annual       	37	                3.7
 pro monthly      	325                	32.5
-churn            	92                  9.2
+churn            	92                      9.2
 
 ---	More than 80% of customers are on paid plans.
 
@@ -139,12 +139,12 @@ WHERE rn = 1
 GROUP BY plan_name;
 
 --- Result 
-plan_name	      customer_count	   percent_of_customers
-trial	          19	               1.9
-basic monthly  	224              	22.4
-pro monthly	    326              	32.6
-pro annual     	195              	19.5
-churn	          236              	23.6
+plan_name	      customer_count    percent_of_customers
+trial	              19	        1.9
+basic monthly         224    	        22.4
+pro monthly	      326              	32.6
+pro annual     	      195              	19.5
+churn	              236              	23.6
 
 ----	More people upgraded to the pro monthly plan, but fewer people signed up for the trial plan.
 
@@ -218,14 +218,14 @@ INNER JOIN ANNUAL AS A ON T.customer_id = A.customer_id
 GROUP BY intervals;
 
 --- Result
-intervals	    customer_count
+intervals       customer_count
 0-30         	49
 121-150      	42
 61-90	        34
 31-60	        24
 151-180      	36
-91-120	       35
-181-210	      26
+91-120	        35
+181-210	        26
 331-360      	1
 241-270      	5
 211-240      	4
